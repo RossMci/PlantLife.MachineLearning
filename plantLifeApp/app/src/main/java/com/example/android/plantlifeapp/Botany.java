@@ -1,6 +1,9 @@
 package com.example.android.plantlifeapp;
 
-public class Botany {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Botany implements Parcelable {
     private String name;
     private  String description;
     private  String image;
@@ -14,10 +17,32 @@ public class Botany {
         this.description = description;
         this.image = image;
         this.origin = origin;
-        ScientificName = scientificName;
+        this.ScientificName = scientificName;
         this.species = species;
         this.type = type;
     }
+
+    protected Botany(Parcel in) {
+        name = in.readString();
+        description = in.readString();
+        image = in.readString();
+        origin = in.readString();
+        ScientificName = in.readString();
+        species = in.readString();
+        type = in.readString();
+    }
+
+    public static final Creator<Botany> CREATOR = new Creator<Botany>() {
+        @Override
+        public Botany createFromParcel(Parcel in) {
+            return new Botany(in);
+        }
+
+        @Override
+        public Botany[] newArray(int size) {
+            return new Botany[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -73,5 +98,21 @@ public class Botany {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(image);
+        dest.writeString(origin);
+        dest.writeString(ScientificName);
+        dest.writeString(species);
+        dest.writeString(type);
     }
 }

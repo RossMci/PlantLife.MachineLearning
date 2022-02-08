@@ -28,8 +28,8 @@ public class descriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_description);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Object position;
-        String[] arrayImages;
+        int position;
+        String[][] arrayImages = new String[0][];
 
          ImageView descriptionImageView= findViewById(R.id.descriptionImageView);
          TextView lableCommonNameextView= findViewById(R.id.lableCommonNameextView);
@@ -40,11 +40,20 @@ public class descriptionActivity extends AppCompatActivity {
          TextView descriptionInfoTextView= findViewById(R.id.descriptionInfoTextView);
 
          if(getIntent() !=null) {
-             bakeryList = getIntent().getParcelableArrayListExtra("bakeryList");
-             position= getIntent().getBundleExtra("position");
-             Glide.with(this).load(bakeryList[position]).centerCrop().into(descriptionImageView);
+             bakeryList = getIntent().getParcelableArrayListExtra("Bakery");
+             position= getIntent().getExtras().getInt("pos");
+             Glide.with(this).load(bakeryList.get(position).getImage()).centerCrop().into(descriptionImageView);
+             String name = bakeryList.get(position).getName();
+             String description= bakeryList.get(position).getDescription();
+             String image= bakeryList.get(position).getImage();
 
+             commonNametextView.setText(name);
+             plantTextView.setText(description);
          }
+
+
+
+
 
 
     }

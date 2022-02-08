@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.plantlifeapp.ui.plantDescription.descriptionFragment;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,8 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder>    {
-     ArrayList<Bakery> bakeryList=new ArrayList<>();
+public class MyAdapter extends FirebaseRecyclerAdapter<Botany, MyAdapter.PlantHolder> {
+//    RecyclerView.Adapter<MyAdapter.PlantHolder>
+     ArrayList<Bakery> bakeryList= new ArrayList<>();
+    ArrayList<Botany> botanyList= new ArrayList<>();
     Context context;
     Activity activity;
     private List list;
@@ -39,10 +43,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder>    {
 
 
 
-    public MyAdapter(Context context,ArrayList<Bakery> bakeryList,List owner) {
+    public MyAdapter(Context context, ArrayList<Bakery> bakeryList, ArrayList<Botany> botanyList, FirebaseRecyclerOptions<Botany> options) {
+        super(options);
         this.context = context;
         this.bakeryList = bakeryList;
-        this.list=owner;
+        this.botanyList=botanyList;
 //        this.activity = activity;
 //        this.listener= listener;
 
@@ -62,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder>    {
             name=view.findViewById(R.id.nameTextView);
             description=view.findViewById(R.id.Label_descriptionTextView);
             imageView=view.findViewById(R.id.itemimageView);
-           Object position= bakeryList.get(getAdapterPosition());
+//           Object position= bakeryList.get(getAdapterPosition());
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,7 +75,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder>    {
                     Intent intent = new Intent(view.getContext(), descriptionActivity.class);
 //                    intent.putExtra("key",bakeryList.get(getAdapterPosition()));
                     intent.putParcelableArrayListExtra("Bakery",bakeryList);
-                    intent.putExtra("position", (Bundle) position);
+                    intent.putParcelableArrayListExtra("botany",botanyList);
+                    intent.putExtra("pos",getAdapterPosition());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    intent.putExtra("position", (Bundle) position);
                     
                     // Ross if you have ingredients and steps you coudl also add those to teh intent using putParecelabelArrayExtra(...)
                     context.startActivity(intent);
@@ -89,23 +97,35 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder>    {
         return new PlantHolder(valueView);
     }
 
+//    @Override
+//    public void onBindViewHolder(@NonNull PlantHolder holder, int position) {
+//        String name = botanyList.get(position).getName();
+//        String description= botanyList.get(position).getDescription();
+//        String image= botanyList.get(position).getImage();
+//
+//        holder.name.setText(name);
+//        holder.description.setText(description);
+//
+//        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
+//
+//
+//    }
+
     @Override
-    public void onBindViewHolder(@NonNull PlantHolder holder, int position) {
-        String name = bakeryList.get(position).getName();
-        String description= bakeryList.get(position).getDescription();
-        String image= bakeryList.get(position).getImage();
+    protected void onBindViewHolder(@NonNull PlantHolder holder, int position, @NonNull Botany model) {
+        String name = botanyList.get(position).getName();
+        String description= botanyList.get(position).getDescription();
+        String image= botanyList.get(position).getImage();
 
         holder.name.setText(name);
         holder.description.setText(description);
 
-        Glide.with(holder.imageView).load(bakeryList.get(position).getImage()).into(holder.imageView);
-
-
+        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return bakeryList.size();
+        return botanyList.size();
     }
 
     public void writeNewBotany(String bonId, String name, String description, String image, String origin, String scientificName, String species, String type) {
