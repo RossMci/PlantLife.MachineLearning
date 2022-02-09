@@ -28,8 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends FirebaseRecyclerAdapter<Botany, MyAdapter.PlantHolder> {
-//    RecyclerView.Adapter<MyAdapter.PlantHolder>
+public class MyAdapter extends FirebaseRecyclerAdapter<
+        Botany, MyAdapter.PlantHolder> {
+
      ArrayList<Bakery> bakeryList= new ArrayList<>();
     ArrayList<Botany> botanyList= new ArrayList<>();
     Context context;
@@ -37,14 +38,15 @@ public class MyAdapter extends FirebaseRecyclerAdapter<Botany, MyAdapter.PlantHo
     private List list;
 //    OnTextClickListener  listener;
 
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference();
+//    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+//    DatabaseReference ref = database.getReference();
     private String TAG;
 
 
 
-    public MyAdapter(Context context, ArrayList<Bakery> bakeryList, ArrayList<Botany> botanyList, FirebaseRecyclerOptions<Botany> options) {
+    public MyAdapter(Context context, ArrayList<Bakery> bakeryList, ArrayList<Botany> botanyList, @NonNull FirebaseRecyclerOptions<Botany> options) {
         super(options);
+//        , @NonNull FirebaseRecyclerOptions<Botany> options
         this.context = context;
         this.bakeryList = bakeryList;
         this.botanyList=botanyList;
@@ -53,6 +55,7 @@ public class MyAdapter extends FirebaseRecyclerAdapter<Botany, MyAdapter.PlantHo
 
 
     }
+
 
 
     public class PlantHolder extends RecyclerView.ViewHolder{
@@ -113,14 +116,15 @@ public class MyAdapter extends FirebaseRecyclerAdapter<Botany, MyAdapter.PlantHo
 
     @Override
     protected void onBindViewHolder(@NonNull PlantHolder holder, int position, @NonNull Botany model) {
-        String name = botanyList.get(position).getName();
-        String description= botanyList.get(position).getDescription();
-        String image= botanyList.get(position).getImage();
-
-        holder.name.setText(name);
-        holder.description.setText(description);
-
-        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
+//        String name = botanyList.get(position).getName();
+//        String description= botanyList.get(position).getDescription();
+//        String image= botanyList.get(position).getImage();
+//
+//        holder.name.setText(name);
+//        holder.description.setText(description);
+//
+//        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
+//        holder.name.setText(model.getName());
     }
 
     @Override
@@ -128,31 +132,31 @@ public class MyAdapter extends FirebaseRecyclerAdapter<Botany, MyAdapter.PlantHo
         return botanyList.size();
     }
 
-    public void writeNewBotany(String bonId, String name, String description, String image, String origin, String scientificName, String species, String type) {
-        Botany botany = new Botany( name,  description,  image,  origin,  scientificName,  species,  type);
+//    public void writeNewBotany(String bonId, String name, String description, String image, String origin, String scientificName, String species, String type) {
+//        Botany botany = new Botany( name,  description,  image,  origin,  scientificName,  species,  type);
+//
+//        ref.child("Bontany").child(bonId).setValue(botany);
+//    }
 
-        ref.child("Bontany").child(bonId).setValue(botany);
-    }
 
 
-
-    private void addBotanyEventListener(DatabaseReference ref) {
-        ValueEventListener bontanyListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                Botany bontany = dataSnapshot.getValue(Botany.class);
-                // ..
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        ref.addValueEventListener(bontanyListener);
-    }
+//    private void addBotanyEventListener(DatabaseReference ref) {
+//        ValueEventListener bontanyListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // Get Post object and use the values to update the UI
+//                Botany bontany = dataSnapshot.getValue(Botany.class);
+//                // ..
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Getting Post failed, log a message
+//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+//            }
+//        };
+//        ref.addValueEventListener(bontanyListener);
+//    }
 
 }
 

@@ -3,9 +3,6 @@ package com.example.android.plantlifeapp;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -17,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.plantlifeapp.databinding.ActivityMainBinding;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -46,10 +45,22 @@ public class MainActivity extends AppCompatActivity    {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Pbase = FirebaseDatabase.getInstance().getReference();
+        FirebaseRecyclerOptions<Botany> fireQ= firbaseQuery();
 
+        FirebaseRecyclerOptions<Botany> options
+                = new FirebaseRecyclerOptions.Builder<Botany>()
+                .setQuery(Pbase, Botany.class)
+                .build();
         examplePlantsRecyclerView = findViewById(R.id.examplePlantsRecyclerView);
-//        firbaseQuery();
-        callMYAdapter(examplePlantsRecyclerView,options);
+        examplePlantsRecyclerView.setNestedScrollingEnabled(false);
+        examplePlantsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        examplePlantsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        setBakeryRecipes();
+        adapter = new MyAdapter(this, bakery,botany,options);
+        examplePlantsRecyclerView.setAdapter(adapter);
+//        callMYAdapter();
+
+
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -66,25 +77,31 @@ public class MainActivity extends AppCompatActivity    {
 
 
 
-    public void callMYAdapter(RecyclerView examplePlantsRecyclerView, FirebaseRecyclerOptions<Botany> options){
-        this.examplePlantsRecyclerView = findViewById(R.id.examplePlantsRecyclerView);
-        this.examplePlantsRecyclerView.setNestedScrollingEnabled(false);
-        this.examplePlantsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.examplePlantsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        setBakeryRecipes();
-       this.adapter = new MyAdapter(this, bakery,botany,options);
-        this.examplePlantsRecyclerView.setAdapter(adapter);
-    }
+    public void callMYAdapter(){
 
-    public void firbaseQuery(){
         FirebaseRecyclerOptions<Botany> options
                 = new FirebaseRecyclerOptions.Builder<Botany>()
                 .setQuery(Pbase, Botany.class)
                 .build();
-        callMYAdapter(examplePlantsRecyclerView,options);
-
+        this.examplePlantsRecyclerView = findViewById(R.id.examplePlantsRecyclerView);
+        this.examplePlantsRecyclerView.setNestedScrollingEnabled(false);
+        this.examplePlantsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.examplePlantsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        this.setBakeryRecipes();
+        this.adapter = new MyAdapter(this, bakery,botany,options);
+        this.examplePlantsRecyclerView.setAdapter(adapter);
     }
-    private void setBakeryRecipes() {
+
+    public FirebaseRecyclerOptions<Botany> firbaseQuery(){
+        FirebaseRecyclerOptions<Botany> options
+                = new FirebaseRecyclerOptions.Builder<Botany>()
+                .setQuery(Pbase, Botany.class)
+                .build();
+//        callMYAdapter(examplePlantsRecyclerView,options);
+
+        return options;
+    }
+    public void setBakeryRecipes() {
         bakery.add(new Bakery("Daisy","Bellis perennis","https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510_960_720.jpg"));
         bakery.add(new Bakery("Rose","Rosa","https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819_960_720.jpg"));
         bakery.add(new Bakery("Rose","Rosa","https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819_960_720.jpg"));
