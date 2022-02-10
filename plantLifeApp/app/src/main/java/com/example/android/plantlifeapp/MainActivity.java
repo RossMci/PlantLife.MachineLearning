@@ -1,6 +1,7 @@
 package com.example.android.plantlifeapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 import androidx.appcompat.app.ActionBar;
@@ -16,10 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.plantlifeapp.databinding.ActivityMainBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity    {
 
@@ -29,8 +34,11 @@ public class MainActivity extends AppCompatActivity    {
     private ArrayList<Botany> botany= new ArrayList<>();
     private List list;
     com.example.android.plantlifeapp.MyAdapter adapter;
+    DbAdapter adapterDb;
     Menu myMenu;
     DatabaseReference Pbase;
+    DatabaseReference ref;
+    String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +52,50 @@ public class MainActivity extends AppCompatActivity    {
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Pbase = FirebaseDatabase.getInstance().getReference();
-        FirebaseRecyclerOptions<Botany> fireQ= firbaseQuery();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref=FirebaseDatabase.getInstance().getReference();
+        Pbase = ref.child("Plant");
+
 
         FirebaseRecyclerOptions<Botany> options
                 = new FirebaseRecyclerOptions.Builder<Botany>()
                 .setQuery(Pbase, Botany.class)
                 .build();
+
         examplePlantsRecyclerView = findViewById(R.id.examplePlantsRecyclerView);
         examplePlantsRecyclerView.setNestedScrollingEnabled(false);
         examplePlantsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         examplePlantsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        setBakeryRecipes();
-        adapter = new MyAdapter(this, bakery,botany,options);
-        examplePlantsRecyclerView.setAdapter(adapter);
-//        callMYAdapter();
+//        setBakeryRecipes();
+        adapter = new MyAdapter(this,botany);
+        adapterDb = new DbAdapter(this,options,botany);
+
+        callMYAdapter(Pbase);
+//        adapter = new MyAdapter(this, bakery,botany,options);
+//        examplePlantsRecyclerView.setAdapter(adapter);
+//        examplePlantsRecyclerView.setAdapter(adapterDb);
 
 
 
+// Attach a listener to read the data at our posts reference
+        Pbase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                Log.d(TAG, "Map :Value is: " + map);
+
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                       Botany data=ds.getValue(Botany.class);
+                       botany.add(data);
+                }
+                Log.d(TAG,"Array List Value is"+botany);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -73,34 +107,26 @@ public class MainActivity extends AppCompatActivity    {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+
     }
 
 
 
-    public void callMYAdapter(){
-
+    public void callMYAdapter(DatabaseReference pbase){
         FirebaseRecyclerOptions<Botany> options
                 = new FirebaseRecyclerOptions.Builder<Botany>()
-                .setQuery(Pbase, Botany.class)
+                .setQuery(pbase, Botany.class)
                 .build();
         this.examplePlantsRecyclerView = findViewById(R.id.examplePlantsRecyclerView);
         this.examplePlantsRecyclerView.setNestedScrollingEnabled(false);
         this.examplePlantsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.examplePlantsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        this.setBakeryRecipes();
-        this.adapter = new MyAdapter(this, bakery,botany,options);
-        this.examplePlantsRecyclerView.setAdapter(adapter);
+//        this.setBakeryRecipes();
+//        this.adapter = new MyAdapter(this, bakery,botany,options);
+        adapterDb = new DbAdapter(this,options, botany);
+        this.examplePlantsRecyclerView.setAdapter(adapterDb);
     }
 
-    public FirebaseRecyclerOptions<Botany> firbaseQuery(){
-        FirebaseRecyclerOptions<Botany> options
-                = new FirebaseRecyclerOptions.Builder<Botany>()
-                .setQuery(Pbase, Botany.class)
-                .build();
-//        callMYAdapter(examplePlantsRecyclerView,options);
-
-        return options;
-    }
     public void setBakeryRecipes() {
         bakery.add(new Bakery("Daisy","Bellis perennis","https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510_960_720.jpg"));
         bakery.add(new Bakery("Rose","Rosa","https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819_960_720.jpg"));
@@ -117,21 +143,23 @@ public class MainActivity extends AppCompatActivity    {
     }
 
 
-//    // Function to tell the app to start getting
-//    // data from database on starting of the activity
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        adapter.startListening();
-//    }
-//
-//    // Function to tell the app to stop getting
-//    // data from database on stopping of the activity
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        adapter.stopListening();
-//    }
+    // Function to tell the app to start getting
+    // data from database on starting of the activity
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapterDb.startListening();
+    }
+
+    // Function to tell the app to stop getting
+    // data from database on stopping of the activity
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapterDb.stopListening();
+    }
+
+
 
 
 

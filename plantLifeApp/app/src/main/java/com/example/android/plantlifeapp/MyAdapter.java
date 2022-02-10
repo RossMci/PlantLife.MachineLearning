@@ -28,8 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends FirebaseRecyclerAdapter<
-        Botany, MyAdapter.PlantHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder> {
 
      ArrayList<Bakery> bakeryList= new ArrayList<>();
     ArrayList<Botany> botanyList= new ArrayList<>();
@@ -38,23 +37,22 @@ public class MyAdapter extends FirebaseRecyclerAdapter<
     private List list;
 //    OnTextClickListener  listener;
 
-//    final FirebaseDatabase database = FirebaseDatabase.getInstance();
-//    DatabaseReference ref = database.getReference();
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference ref = database.getReference();
     private String TAG;
 
 
-
-    public MyAdapter(Context context, ArrayList<Bakery> bakeryList, ArrayList<Botany> botanyList, @NonNull FirebaseRecyclerOptions<Botany> options) {
-        super(options);
-//        , @NonNull FirebaseRecyclerOptions<Botany> options
+//, ArrayList<Bakery> bakeryList, ArrayList<Botany> botanyList,
+    public MyAdapter(Context context,ArrayList<Botany> botanyList) {
         this.context = context;
-        this.bakeryList = bakeryList;
+//        this.bakeryList = bakeryList;
         this.botanyList=botanyList;
 //        this.activity = activity;
 //        this.listener= listener;
 
 
     }
+
 
 
 
@@ -68,7 +66,7 @@ public class MyAdapter extends FirebaseRecyclerAdapter<
         public PlantHolder(final  View view){
             super(view);
             name=view.findViewById(R.id.nameTextView);
-            description=view.findViewById(R.id.Label_descriptionTextView);
+            description=view.findViewById(R.id.scientificNameTextView);
             imageView=view.findViewById(R.id.itemimageView);
 //           Object position= bakeryList.get(getAdapterPosition());
 
@@ -100,63 +98,51 @@ public class MyAdapter extends FirebaseRecyclerAdapter<
         return new PlantHolder(valueView);
     }
 
-//    @Override
-//    public void onBindViewHolder(@NonNull PlantHolder holder, int position) {
-//        String name = botanyList.get(position).getName();
-//        String description= botanyList.get(position).getDescription();
-//        String image= botanyList.get(position).getImage();
-//
-//        holder.name.setText(name);
-//        holder.description.setText(description);
-//
-//        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
-//
-//
-//    }
-
     @Override
-    protected void onBindViewHolder(@NonNull PlantHolder holder, int position, @NonNull Botany model) {
-//        String name = botanyList.get(position).getName();
-//        String description= botanyList.get(position).getDescription();
-//        String image= botanyList.get(position).getImage();
-//
-//        holder.name.setText(name);
-//        holder.description.setText(description);
-//
-//        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
-//        holder.name.setText(model.getName());
+    public void onBindViewHolder(@NonNull PlantHolder holder, int position) {
+        String name = botanyList.get(position).getName();
+        String description= botanyList.get(position).getDescription();
+        String image= botanyList.get(position).getImage();
+
+        holder.name.setText(name);
+        holder.description.setText(description);
+
+        Glide.with(holder.imageView).load(botanyList.get(position).getImage()).into(holder.imageView);
+
+
     }
+
 
     @Override
     public int getItemCount() {
         return botanyList.size();
     }
 
-//    public void writeNewBotany(String bonId, String name, String description, String image, String origin, String scientificName, String species, String type) {
-//        Botany botany = new Botany( name,  description,  image,  origin,  scientificName,  species,  type);
-//
-//        ref.child("Bontany").child(bonId).setValue(botany);
-//    }
+    public void writeNewBotany(String bonId, String name, String description, String image, String origin, String scientificName, String species, String type) {
+        Botany botany = new Botany( name,  description,  image,  origin,  scientificName,  species,  type);
+
+        ref.child("Bontany").child(bonId).setValue(botany);
+    }
 
 
 
-//    private void addBotanyEventListener(DatabaseReference ref) {
-//        ValueEventListener bontanyListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-//                Botany bontany = dataSnapshot.getValue(Botany.class);
-//                // ..
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//            }
-//        };
-//        ref.addValueEventListener(bontanyListener);
-//    }
+    private void addBotanyEventListener(DatabaseReference ref) {
+        ValueEventListener bontanyListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Botany bontany = dataSnapshot.getValue(Botany.class);
+                // ..
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        ref.addValueEventListener(bontanyListener);
+    }
 
 }
 

@@ -22,6 +22,8 @@ public class Botany implements Parcelable {
         this.type = type;
     }
 
+    public Botany() { }
+
     protected Botany(Parcel in) {
         name = in.readString();
         description = in.readString();

@@ -39,17 +39,17 @@ public class descriptionActivity extends AppCompatActivity {
          TextView descriptionLableTextView= findViewById(R.id.descriptionLableTextView);
          TextView descriptionInfoTextView= findViewById(R.id.descriptionInfoTextView);
 
-         if(getIntent() !=null) {
-             bakeryList = getIntent().getParcelableArrayListExtra("Bakery");
-             position= getIntent().getExtras().getInt("pos");
-             Glide.with(this).load(bakeryList.get(position).getImage()).centerCrop().into(descriptionImageView);
-             String name = bakeryList.get(position).getName();
-             String description= bakeryList.get(position).getDescription();
-             String image= bakeryList.get(position).getImage();
-
-             commonNametextView.setText(name);
-             plantTextView.setText(description);
-         }
+//         if(getIntent() !=null) {
+//             bakeryList = getIntent().getParcelableArrayListExtra("Bakery");
+//             position= getIntent().getExtras().getInt("pos");
+//             Glide.with(this).load(bakeryList.get(position).getImage()).centerCrop().into(descriptionImageView);
+//             String name = bakeryList.get(position).getName();
+//             String description= bakeryList.get(position).getDescription();
+//             String image= bakeryList.get(position).getImage();
+//
+//             commonNametextView.setText(name);
+//             plantTextView.setText(description);
+//         }
 
 
 
