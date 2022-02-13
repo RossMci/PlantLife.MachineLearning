@@ -1,5 +1,6 @@
 package com.example.android.plantlifeapp;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,6 +12,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 public class BotanyAdapter extends FirebaseRecyclerAdapter<
         Botany, BotanyAdapter.botanyViewholder> {
+
+    Context context;
+
     /**
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
      * {@link FirebaseRecyclerOptions} for configuration options.

@@ -29,12 +29,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder> {
-
-     ArrayList<Bakery> bakeryList= new ArrayList<>();
     ArrayList<Botany> botanyList= new ArrayList<>();
     Context context;
     Activity activity;
-    private List list;
 //    OnTextClickListener  listener;
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -42,7 +39,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder> {
     private String TAG;
 
 
-//, ArrayList<Bakery> bakeryList, ArrayList<Botany> botanyList,
     public MyAdapter(Context context,ArrayList<Botany> botanyList) {
         this.context = context;
 //        this.bakeryList = bakeryList;
@@ -75,7 +71,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.PlantHolder> {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), descriptionActivity.class);
 //                    intent.putExtra("key",bakeryList.get(getAdapterPosition()));
-                    intent.putParcelableArrayListExtra("Bakery",bakeryList);
                     intent.putParcelableArrayListExtra("botany",botanyList);
                     intent.putExtra("pos",getAdapterPosition());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

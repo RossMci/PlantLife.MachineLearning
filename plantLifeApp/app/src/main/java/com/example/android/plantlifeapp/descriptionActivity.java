@@ -12,7 +12,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class descriptionActivity extends AppCompatActivity {
-     ArrayList<Bakery> bakeryList=new ArrayList<>();
+     ArrayList<Botany> botanyList=new ArrayList<>();
     private ImageView descriptionImageView;
     private TextView lableCommonNameextView;
     private TextView labaleNameTextView;
@@ -20,8 +20,6 @@ public class descriptionActivity extends AppCompatActivity {
     private TextView commonNametextView;
     private TextView descriptionLableTextView;
     private TextView descriptionInfoTextView;
-    Bakery plant;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,24 +30,31 @@ public class descriptionActivity extends AppCompatActivity {
         String[][] arrayImages = new String[0][];
 
          ImageView descriptionImageView= findViewById(R.id.descriptionImageView);
-         TextView lableCommonNameextView= findViewById(R.id.lableCommonNameextView);
-         TextView labaleNameTextView= findViewById(R.id.labaleNameTextView);
          TextView plantTextView= findViewById(R.id.plantTextView);
          TextView commonNametextView= findViewById(R.id.commonNametextView);
-         TextView descriptionLableTextView= findViewById(R.id.descriptionLableTextView);
          TextView descriptionInfoTextView= findViewById(R.id.descriptionInfoTextView);
-
-//         if(getIntent() !=null) {
-//             bakeryList = getIntent().getParcelableArrayListExtra("Bakery");
-//             position= getIntent().getExtras().getInt("pos");
-//             Glide.with(this).load(bakeryList.get(position).getImage()).centerCrop().into(descriptionImageView);
-//             String name = bakeryList.get(position).getName();
-//             String description= bakeryList.get(position).getDescription();
-//             String image= bakeryList.get(position).getImage();
+         TextView originTextView=findViewById(R.id.originTextView);
+         TextView speciesTextView=findViewById(R.id.speciesTextView);
+         TextView typeTextView=findViewById(R.id.typeTextView);
+         if(getIntent() !=null) {
+             botanyList = getIntent().getParcelableArrayListExtra("botany");
+             position= getIntent().getExtras().getInt("pos");
+             Glide.with(this).load(botanyList.get(position).getImage()).centerCrop().into(descriptionImageView);
+             String name = botanyList.get(position).getName();
+             String ScientificName= botanyList.get(position).getScientificName();
+             String origin= botanyList.get(position).getOrigin();
+             String species= botanyList.get(position).getSpecies();
+             String type= botanyList.get(position).getType();
+             String description= botanyList.get(position).getDescription();
 //
-//             commonNametextView.setText(name);
-//             plantTextView.setText(description);
-//         }
+             commonNametextView.setText(name);
+             plantTextView.setText(ScientificName);
+             originTextView.setText(origin);
+             speciesTextView.setText(species);
+             typeTextView.setText(type);
+             descriptionInfoTextView.setText(description);
+
+         }
 
 
 

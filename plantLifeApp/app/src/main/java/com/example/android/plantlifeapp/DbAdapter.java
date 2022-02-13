@@ -49,7 +49,6 @@ Context context;
         holder.ScientificName.setText(model.getScientificName());
         Glide.with(holder.imageView).load(model.getImage()).into(holder.imageView);
 
-
     }
 
     @NonNull
@@ -93,8 +92,7 @@ Context context;
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), descriptionActivity.class);
-//                    intent.putExtra("key",bakeryList.get(getAdapterPosition()));
-//                    intent.putParcelableArrayListExtra("Bakery",bakeryList);
+
                     intent.putParcelableArrayListExtra("botany",botanyList);
                     intent.putExtra("pos",getAdapterPosition());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -106,4 +104,6 @@ Context context;
             });
         }
     }
+
+
 }

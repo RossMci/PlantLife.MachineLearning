@@ -1,9 +1,14 @@
 package com.example.android.plantlifeapp;
 //import org.tensorflow;
+//import tensorflow;
+
+import android.widget.Toast;
+
+import com.example.android.plantlifeapp.ui.camera.Camera;
 
 public class FlowerML {
-    public void identifyFlower(){
-//
+    public static void identifyFlower(){
+
 //        var class_names = new String[]{"daisy", "dandelion", "roses", "sunflowers", "tulips"};
 //
 //       double img_height = 180;
@@ -28,4 +33,6 @@ public class FlowerML {
 //                "This image most likely belongs to {} with a {:.2f} percent confidence."
 //                        .format(class_names[numpy.argmax(score)], 100 * numpy.max(score)));
     }
+
+
 }
