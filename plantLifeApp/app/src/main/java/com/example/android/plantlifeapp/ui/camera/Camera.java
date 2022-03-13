@@ -108,7 +108,7 @@ public class  Camera extends Fragment   {
                 Bitmap bitmap = (Bitmap) bundle.get("data");
             Toast.makeText(getActivity(), "Identifying plant type",
                     Toast.LENGTH_LONG).show();
-             FlowerML.identifyFlower();
+//             FlowerML.identifyFlower();
                 camreaDisplayImageView.setImageBitmap(bitmap);
             Toast.makeText(getActivity(), "Successful identification of a Plant",
                     Toast.LENGTH_LONG).show();

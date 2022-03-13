@@ -1,9 +1,14 @@
 package com.example.android.plantlifeapp.ui.home;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,11 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.example.android.plantlifeapp.MyAdapter;
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.example.android.plantlifeapp.Botany;
 import com.example.android.plantlifeapp.DbAdapter;
 import com.example.android.plantlifeapp.MainActivity;
 import com.example.android.plantlifeapp.MyAdapter;
 import com.example.android.plantlifeapp.R;
+import com.example.android.plantlifeapp.botanyDatabase;
 import com.example.android.plantlifeapp.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +46,7 @@ public class HomeFragment extends Fragment {
     DatabaseReference Pbase;
     DatabaseReference ref;
     String TAG;
+    TextView pythonTextView;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -46,11 +55,34 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+
         ref=FirebaseDatabase.getInstance().getReference();
 
         Query queryRoom = FirebaseDatabase.getInstance().getReference().child("Plant").limitToLast(100);
 
         callMYAdapter(queryRoom,root);
+
+//        botanyDatabase.writeNewSnaps();
+
+//        camreaButton.setOnClickListener(
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+//                        {
+//                            requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+//                        }
+//                        else
+//                        {
+//                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                            activityResultLauncher.launch(intent);
+//
+//                        }
+//
+//                    }
+//                });
+//        pythonTextView=  root.findViewById(R.id.pythonTextView);
+//        pythonTextView.setText(getPythonHelloWorld());
 
         return root;
     }
@@ -63,10 +95,19 @@ public class HomeFragment extends Fragment {
 //        View root = binding.getRoot();
 
         super.onCreate(savedInstanceState);
+//        pythonTextView=  root.findViewById(R.id.pythonTextView);
+//        pythonTextView.setText(getPythonHelloWorld());
+
 
 
     }
 
+
+    private String getPythonHelloWorld() {
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("helloworldscript");
+        return pythonFile.callAttr("helloworld").toString();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

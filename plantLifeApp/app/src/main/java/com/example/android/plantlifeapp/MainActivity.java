@@ -1,5 +1,6 @@
 package com.example.android.plantlifeapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chaquo.python.PyObject;
 import com.example.android.plantlifeapp.databinding.ActivityMainBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +29,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
+
 
 public class MainActivity extends AppCompatActivity    {
 
@@ -39,10 +44,29 @@ public class MainActivity extends AppCompatActivity    {
     DatabaseReference Pbase;
     DatabaseReference ref;
     String TAG;
+    Context context;
 
+
+
+
+    private void initPython() {
+        if (!Python.isStarted()) {
+            Python.start(new AndroidPlatform(this));
+        }
+        //Log.d("Python",getPythonHelloWorld());
+
+    }
+
+    private String getPythonHelloWorld() {
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("helloworldscript");
+        return pythonFile.callAttr("helloworld").toString();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initPython();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
