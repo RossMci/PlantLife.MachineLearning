@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity    {
 
     private String getPythonHelloWorld() {
         Python python = Python.getInstance();
-        PyObject pythonFile = python.getModule("helloworldscript");
-        return pythonFile.callAttr("helloworld").toString();
+        PyObject pythonFile = python.getModule("predictplant");
+        return pythonFile.callAttr("main").toString();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
