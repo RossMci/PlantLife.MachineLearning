@@ -53,14 +53,12 @@ public class MainActivity extends AppCompatActivity    {
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
-        //Log.d("Python",getPythonHelloWorld());
-
     }
 
     private String getPythonHelloWorld() {
         Python python = Python.getInstance();
         PyObject pythonFile = python.getModule("predictplant");
-        return pythonFile.callAttr("main").toString();
+        return pythonFile.callAttr("main", "pot.jpg").toString();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

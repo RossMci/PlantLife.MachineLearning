@@ -1,11 +1,12 @@
-
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-
-import sys
-from tensorflow import keras
+import json
 import numpy as np
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import tensorflow as tf
+import sys
+
+from tensorflow import keras
 
 def main():
     # loading saved model
@@ -31,5 +32,8 @@ def main():
     class_names=['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips']
 
     json_result_dictonary = {'class': class_names[np.argmax(score)], 'score': 100 * np.max(score)}
-    return json_result_dictonary
-    #print(    "This image most likely belongs to {} with a {:.2f} percent confidence."     .format(class_names[np.argmax(score)], 100 * np.max(score)))
+    return json.dumps(json_result_dictonary)
+    #return class_names[np.argmax(score)] + "," +  (100 * np.max(score))
+
+#print(    "This image most likely belongs to {} with a {:.2f} percent confidence."     .format(class_names[np.argmax(score)], 100 * np.max(score)))
+#print(main())

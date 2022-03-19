@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:221878023421:android:c85c1df611b536c2d13a94",
         "android_client_info": {
-          "package_name": "com.example.android.plantlifeapp"
+          "package_name": "io.github.rossmci"
         }
       },
       "oauth_client": [

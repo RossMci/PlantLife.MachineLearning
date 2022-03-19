@@ -4,39 +4,35 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.android.plantlifeapp.CamreaActivity2;
-import com.example.android.plantlifeapp.DbAdapter;
-import com.example.android.plantlifeapp.FlowerML;
-import com.example.android.plantlifeapp.MainActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
+
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
 import com.example.android.plantlifeapp.R;
-import com.example.android.plantlifeapp.cameraAdapter;
 import com.example.android.plantlifeapp.databinding.FragmentCameraBinding;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
-public class  Camera extends Fragment   {
+
+public class Camera extends Fragment {
     private FragmentCameraBinding binding;
-    public static final int CAMERA_ACTION_CODE=1;
+    public static final int CAMERA_ACTION_CODE = 1;
     ActivityResultLauncher<Intent> activityResultLauncher;
     ActivityResultLauncher<String> requestPermissionLauncher;
 
@@ -78,6 +74,35 @@ public class  Camera extends Fragment   {
 
     }
 
+
+    private Uri saveBitmapAsJpg(Bitmap bitmap) throws FileNotFoundException {
+
+        File dir = Environment.getDownloadCacheDirectory();
+
+        File file = new File(dir, System.currentTimeMillis() + ".jpg");
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+
+        Uri uri = Uri.fromFile(file);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(uri);
+        return uri;
+    }
+
+    private String getPythonTestOutput() {
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("predictplant");
+        return pythonFile.callAttr("main", "pot.jpg").toString();
+        //return pythonFile.callAttr("main", "/storage/emulated/0/Pictures/IMG_20220319_211355.JPG").toString();
+    }
+
+
+    private String getPythonOutput(Uri uri) {
+        Python python = Python.getInstance();
+        PyObject pythonFile = python.getModule("predictplant");
+        return pythonFile.callAttr("main", uri.getPath()).toString();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,23 +124,35 @@ public class  Camera extends Fragment   {
 //                startActivity(intent);
 //            }
 //        });
-         camreaButton = (Button) root.findViewById(R.id.CamreaButton);
-         camreaDisplayImageView = root.findViewById(R.id.camreaDisplayImageView);
+        camreaButton = (Button) root.findViewById(R.id.CamreaButton);
+        camreaDisplayImageView = root.findViewById(R.id.camreaDisplayImageView);
 
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
-                Bundle bundle = result.getData().getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
+            Bundle bundle = result.getData().getExtras();
+            Bitmap bitmap = (Bitmap) bundle.get("data");
             Toast.makeText(getActivity(), "Identifying plant type",
                     Toast.LENGTH_LONG).show();
-//             FlowerML.identifyFlower();
+            Log.d("predictionTest",getPythonTestOutput());
+            try {
+                Uri uri = saveBitmapAsJpg(bitmap);
+                Log.d("Path",uri .getPath());
+                String predictionResult = getPythonOutput(uri);
+                Log.d("predictionResult",predictionResult);
+
+                //String className =  predictionResult.split(",")[0]
+                //String accuracy =  predictionResult.split(",")[1]
                 camreaDisplayImageView.setImageBitmap(bitmap);
-            Toast.makeText(getActivity(), "Successful identification of a Plant",
-                    Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), predictionResult,
+                        Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
 
         });
 
-       requestPermissionLauncher =
+        requestPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -130,12 +167,9 @@ public class  Camera extends Fragment   {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                        {
+                        if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                             requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-                        }
-                        else
-                        {
+                        } else {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             activityResultLauncher.launch(intent);
 
@@ -148,12 +182,9 @@ public class  Camera extends Fragment   {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                        {
+                        if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                             requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-                        }
-                        else
-                        {
+                        } else {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             activityResultLauncher.launch(intent);
 
@@ -165,8 +196,6 @@ public class  Camera extends Fragment   {
 
         return root;
     }
-
-
 
 
     @Override
