@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.camera.Camera">
+
+    <ImageView
+        android:id="@+id/camreaDisplayImageView"
+        android:layout_width="match_parent"
+        android:layout_height="490dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        app:srcCompat="@drawable/logo" />
+
+    <Button
+        android:id="@+id/CamreaButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:text="Camrea" />
+
+    <Button
+        android:id="@+id/savePlantButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="Camrea" />
+
+    <!--    <GridView-->
+    <!--        android:id="@+id/Grid"-->
+    <!--        android:layout_width="403dp"-->
+    <!--        android:layout_height="346dp"-->
+    <!--        android:layout_marginTop="56dp"-->
+    <!--        android:layout_marginBottom="220dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/CamreaButton" />-->
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.android.plantlifeapp.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/mySnapsFragment"
+        android:name="com.example.android.plantlifeapp.ui.mySnaps.mySnaps"
+        android:label="fragment_my_snaps"
+        tools:layout="@layout/fragment_my_snaps" />
+    <fragment
+        android:id="@+id/mySnapGarden"
+        android:name="com.example.android.plantlifeapp.ui.mySnapGarden.mySnapGarden"
+        android:label="fragment_my_snap_garden"
+        tools:layout="@layout/fragment_my_snap_garden" />
+    <fragment
+        android:id="@+id/camera"
+        android:name="com.example.android.plantlifeapp.ui.camera.Camera"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
+</navigation>
